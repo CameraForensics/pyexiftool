@@ -168,8 +168,7 @@ class ExifTool(object):
             return
         with open(os.devnull, "w") as devnull:
             self._process = subprocess.Popen(
-                [self.executable, "-stay_open", "True",  "-@", "-",
-                 "-common_args", "-G", "-n"],
+                [self.executable, "-stay_open", "True",  "-@", "-"],
                 stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                 stderr=devnull)
         self.running = True
@@ -286,7 +285,8 @@ class ExifTool(object):
         if isinstance(filenames, basestring):
             raise TypeError("The argument 'filenames' must be "
                             "an iterable of strings")
-        params = ["-" + t for t in tags]
+        params = ["-u", "-F", "-c", "%+.5f"]
+        params.extend(tags)
         params.extend(filenames)
         return self.execute_json(*params)
 
